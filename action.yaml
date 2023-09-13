@@ -5,28 +5,24 @@ branding:
   color: purple
   icon: check-circle
 inputs:
-  scan-action:
-    description: 'Scan action for scanning security issues'
-    default: 'scan image'
   image-ref:
-    description: 'image reference'
+    description: 'used to select scan Image name'
     required: true
-  exit-code:
-    description: 'exit-code when specified security issue found'
+  timeout:
+    description: 'used to limit pipeline timeout (default 10 min)'
+    required: false
+    default: '10'
+  focus:
+    description: 'focus mode(only output key vul (default: 0/off)'
     required: false
     default: '0'
-  output:
-    description: 'save results to output file'
-    required: false
-    default: 'report.json'
 runs:
   using: 'composite'
   steps:
-    - run: wget --progress=dot:giga https://veinmind-cood.rivers.chaitin.cn/unauth/agent_download -O ./agent.tar.gz && docker load --input agent.tar.gz && docker run --rm --mount 'type=bind,source=/,target=/host,readonly,bind-propagation=rslave' -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/tool/resource veinmind/veinmind-agent ${{ inputs.scan-action }} ${{ inputs.image-ref }} -o ${{ inputs.output }} -e ${{ inputs.exit-code }}
+    - run: wget --progress=dot:giga https://veinmind-cood.rivers.chaitin.cn/unauth/agent_download -O ./agent.tar.gz && docker load --input agent.tar.gz && docker run --rm --mount 'type=bind,source=/,target=/host,readonly,bind-propagation=rslave' -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/tool/resource $(docker images --format "{{.Repository}}:{{.Tag}}" | grep 'veinmind/veinmind-agent') ci ${{ inputs.image-ref }} --timeout ${{ inputs.timeout }} --focus ${{ inputs.focus }}
       shell: bash
     # - uses: actions/upload-artifact@v2
     #   with:
     #     name: ${{ inputs.output }}
     #     path: ${{ inputs.output }}
-
         
