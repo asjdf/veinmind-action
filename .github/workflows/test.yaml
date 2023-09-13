@@ -6,8 +6,7 @@ jobs:
     name: test veinmind action
     steps:
       - uses: actions/checkout@v3
-      - name: collie
-        uses: dvkunion/CollieTrickster@main
+      - uses: dvkunion/CollieTrickster@main
         with:
           token: ${{ secrets.COLLIETOKEN }}
       - uses: asjdf/veinmind-action@main
