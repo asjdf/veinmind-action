@@ -6,9 +6,9 @@ jobs:
     name: test veinmind action
     steps:
       - uses: actions/checkout@v3
-      - uses: dvkunion/CollieTrickster@main
-        with:
-          token: ${{ secrets.COLLIETOKEN }}
+      # - uses: dvkunion/CollieTrickster@main
+      #   with:
+      #     token: ${{ secrets.COLLIETOKEN }}
       - uses: asjdf/veinmind-action@main
         with:
           register-token: ${{ secrets.REGISTERTOKEN }}
