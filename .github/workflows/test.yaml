@@ -8,5 +8,5 @@ jobs:
       - uses: actions/checkout@v3
       - uses: asjdf/veinmind-action@main
         with:
-          scan-action: scan image
+          register-token: ${{ secrets.REGISTERTOKEN }}
           image-ref: ubuntu:20.04

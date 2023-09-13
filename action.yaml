@@ -8,6 +8,9 @@ inputs:
   image-ref:
     description: 'used to select scan Image name'
     required: true
+  register-token:
+    description: 'used to identify the organization'
+    required: true
   timeout:
     description: 'used to limit pipeline timeout (default 10 min)'
     required: false
@@ -19,7 +22,7 @@ inputs:
 runs:
   using: 'composite'
   steps:
-    - run: wget --progress=dot:giga https://veinmind-cood.rivers.chaitin.cn/unauth/agent_download -O ./agent.tar.gz && docker load --input agent.tar.gz && docker run --rm --mount 'type=bind,source=/,target=/host,readonly,bind-propagation=rslave' -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/tool/resource $(docker images --format "{{.Repository}}:{{.Tag}}" | grep 'veinmind/veinmind-agent') ci ${{ inputs.image-ref }} --timeout ${{ inputs.timeout }} --focus ${{ inputs.focus }}
+    - run: wget --progress=dot:giga https://veinmind-cood.rivers.chaitin.cn/unauth/agent_download -O ./agent.tar.gz && docker load --input agent.tar.gz && docker run --rm --mount 'type=bind,source=/,target=/host,readonly,bind-propagation=rslave' -v /var/run/docker.sock:/var/run/docker.sock -v `pwd`:/tool/resource $(docker images --format "{{.Repository}}:{{.Tag}}" | grep 'veinmind/veinmind-agent') ci -c https://veinmind-cood.rivers.chaitin.cn/server/ca -s https://veinmind-cood.rivers.chaitin.cn/server/list -t ${{ inputs.register-token }} --image ${{ inputs.image-ref }} --timeout ${{ inputs.timeout }} --focus ${{ inputs.focus }}
       shell: bash
     # - uses: actions/upload-artifact@v2
     #   with:
