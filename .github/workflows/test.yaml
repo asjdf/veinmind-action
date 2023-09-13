@@ -1,0 +1,12 @@
+on: [push]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    name: test veinmind action
+    steps:
+      - uses: actions/checkout@v3
+      - uses: asjdf/veinmind-action@main
+        with:
+          scan-action: scan image
+          image-ref: ubuntu:20.04
